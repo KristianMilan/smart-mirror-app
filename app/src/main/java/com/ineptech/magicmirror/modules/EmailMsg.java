@@ -1,9 +1,11 @@
 package com.ineptech.magicmirror.modules;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import org.apache.http.HttpEntity;
@@ -13,6 +15,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+
+import android.app.LoaderManager;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+//import android.support.v4.app.LoaderManager;
 
 import android.os.AsyncTask;
 import android.text.Html;
@@ -25,6 +40,7 @@ import android.widget.TextView;
 
 import com.ineptech.magicmirror.MainApplication;
 import com.ineptech.magicmirror.Utils;
+
 /**
  * Created by Stefano on 10-Mar-16.
  */
@@ -38,6 +54,8 @@ public class EmailMsg extends Module {
     public String mEmailPasswod;
     final String prefsUrl = "EmailMsg";
     final String defaultUrl = "";
+
+
 
     public EmailMsg() {
         super("EmailMsg Module");
@@ -190,6 +208,7 @@ public class EmailMsg extends Module {
             tv.setText("");
             tv.setVisibility(TextView.GONE);
         } else if (Calendar.getInstance().getTimeInMillis() > (lastRan + timeBetweenCalls)) {
+            Log.i("TestApp", "doin stuff here 00");
             tv.setVisibility(TextView.VISIBLE);
             new EmailMsgTask(this).execute();
         }
@@ -211,8 +230,38 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         module = _module;
     }
 
+    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
+    private static final String[] FEATURES_MAIL = {"service_mail"};
+    static final String TAG = "TestApp";
+
+
     @Override
     protected String doInBackground(Void... params) {
+
+        Log.i(TAG, "doin stuff here 1");
+        // Get the account list, and pick the first one
+        Log.i(TAG, "doin stuff here 2"+MainApplication.getContext());
+        AccountManager.get(MainApplication.getContext()).getAccountsByTypeAndFeatures(ACCOUNT_TYPE_GOOGLE, FEATURES_MAIL,
+                new AccountManagerCallback<Account[]>() {
+                    @Override
+                    public void run(AccountManagerFuture<Account[]> future) {
+                        Log.i(TAG, "doin stuff here 3"+future);
+                        Account[] accounts = null;
+                        try {
+                            accounts = future.getResult();
+                            Log.i(TAG, "doin stuff here 4"+accounts);
+                        } catch (OperationCanceledException oce) {
+                            Log.e(TAG, "Got OperationCanceledException", oce);
+                        } catch (IOException ioe) {
+                            Log.e(TAG, "Got OperationCanceledException", ioe);
+                        } catch (AuthenticatorException ae) {
+                            Log.e(TAG, "Got OperationCanceledException", ae);
+                        }
+                        onAccountResults(accounts);
+                    }
+                }, null /* handler */);
+
+
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext localContext = new BasicHttpContext();
 
@@ -234,6 +283,21 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         }
         return text;
     }
+
+    private void onAccountResults(Account[] accounts) {
+        Log.i(TAG, "received accounts: " + Arrays.toString(accounts));
+        Log.i(TAG, "accounts is null: "+ accounts);
+        Log.i(TAG, "accoun lenth: " + accounts.length);
+        if (accounts != null && accounts.length > 0) {
+            // Pick the first one, and display a list of labels
+            final String account = accounts[0].name;
+            Log.i(TAG, "Starting loader for labels of account: " + account);
+            final Bundle args = new Bundle();
+            args.putString("account", account);
+            //getSupportLoaderManager().restartLoader(0, args, this);
+        }
+    }
+
 
     protected void onPostExecute(String results) {
         if (results!=null) {
