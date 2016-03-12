@@ -24,7 +24,10 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 
 import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 //import android.support.v4.app.LoaderManager;
@@ -294,9 +297,28 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
             Log.i(TAG, "Starting loader for labels of account: " + account);
             final Bundle args = new Bundle();
             args.putString("account", account);
-            //getSupportLoaderManager().restartLoader(0, args, this);
+           // getSupportLoaderManager().restartLoader(0, args, this);
         }
     }
+
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//        final String account = args.getString("account");
+//        final Uri labelsUri = com.ineptech.magicmirror.modules.GmailContract.Labels.getLabelsUri(account);
+//        return new CursorLoader(this, labelsUri, null, null, null, null);
+//    }
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        if (data != null) {
+//            Log.i(TAG, "Received cursor with # rows: " + data.getCount());
+//        }
+//        mAdapter.swapCursor(data);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> loader) {
+//    }
+
 
 
     protected void onPostExecute(String results) {
