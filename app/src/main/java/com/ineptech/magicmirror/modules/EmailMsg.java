@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 //import android.support.v4.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 
 import android.os.AsyncTask;
 import android.text.Html;
@@ -57,6 +58,8 @@ public class EmailMsg extends Module {
     public String mEmailPasswod;
     final String prefsUrl = "EmailMsg";
     final String defaultUrl = "";
+    final String defaultAcc = "";
+    final String defaultPsw = "";
 
 
 
@@ -65,14 +68,16 @@ public class EmailMsg extends Module {
         desc = "This module would, one day, fetch and display data from gmail account";
         defaultTextSize = 40;
         sampleString = "Arbitrary email account";
-        mUrl = "";
+        mUrl          = "";
         mEmailAccount = "";//"trentanniepassa@gmail.com";
         mEmailPasswod = "";//"trentanni";
         loadConfig();
     }
 
     private void loadConfig() {
-        mUrl = prefs.get(prefsUrl, defaultUrl);
+        mUrl          = prefs.get(prefsUrl, defaultUrl);
+        mEmailAccount = prefs.get(prefsUrl+"_emailAccount", defaultAcc);
+        mEmailPasswod = prefs.get(prefsUrl+"_emailPassword", defaultPsw);
     }
 
     @Override
@@ -80,7 +85,7 @@ public class EmailMsg extends Module {
         super.saveConfig();
         prefs.set(prefsUrl, mUrl);
         prefs.set(prefsUrl+"_emailAccount", mEmailAccount);
-        prefs.set(prefsUrl+"_emailPasswod", mEmailPasswod);
+        prefs.set(prefsUrl+"_emailPassword", mEmailPasswod);
     }
 
     @Override
@@ -109,7 +114,7 @@ public class EmailMsg extends Module {
         } else {        // widgets for adding a new Url
 //        if (mUrl.length() == 0) {
             final EditText addurl = new EditText(MainApplication.getContext());
-            addurl.setText("http://yoursite.com/page.txt");
+            addurl.setText("http://ineptech.com/test.html");
             Button plus = new Button(MainApplication.getContext());
             plus.setText("+");
             plus.setOnClickListener
@@ -179,7 +184,7 @@ public class EmailMsg extends Module {
             LinearLayout addholderPsw = new LinearLayout(MainApplication.getContext());
             addholderPsw.setOrientation(LinearLayout.HORIZONTAL);
             TextView hdtv = new TextView(MainApplication.getContext());
-            hdtv.setText(mEmailAccount);
+            hdtv.setText(mEmailPasswod);
             addholderPsw.addView(hdtv);
             addholderPsw.addView(remove);
             configLayout.addView(addholderPsw);
