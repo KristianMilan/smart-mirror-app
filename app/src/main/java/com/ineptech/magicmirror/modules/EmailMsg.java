@@ -3,10 +3,13 @@ package com.ineptech.magicmirror.modules;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.security.NoSuchProviderException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,8 +30,10 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 //import android.support.v4.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -41,9 +46,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ineptech.magicmirror.MainApplication;
 import com.ineptech.magicmirror.Utils;
+import com.sun.mail.imap.IMAPFolder;
+
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.*;
 
 /**
  * Created by Stefano on 10-Mar-16.
@@ -237,90 +250,51 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         module = _module;
     }
 
-    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
-    private static final String[] FEATURES_MAIL = {"service_mail"};
+//    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
+//    private static final String[] FEATURES_MAIL = {"service_mail"};
     static final String TAG = "TestApp";
-    public String acs;
 
 
 
     @Override
     protected String doInBackground(Void... params) {
 
+        FolderFetchIMAP newm = new FolderFetchIMAP();
+        Log.i(TAG, "doin stuff here with newm " + newm);
+
+
         // Get the account list, and pick the first one
         Log.i(TAG, "doin stuff here 2"+MainApplication.getContext());
-        AccountManager.get(MainApplication.getContext()).getAccountsByTypeAndFeatures(ACCOUNT_TYPE_GOOGLE, FEATURES_MAIL,
-                new AccountManagerCallback<Account[]>() {
-                    @Override
-                    public void run(AccountManagerFuture<Account[]> future) {
-                        Log.i(TAG, "doin stuff here 3");
-                        Account[] accounts = null;
-                        try {
-                            accounts = future.getResult();
-                        } catch (OperationCanceledException oce) {
-                            Log.e(TAG, "Got OperationCanceledException", oce);
-                        } catch (IOException ioe) {
-                            Log.e(TAG, "Got OperationCanceledException", ioe);
-                        } catch (AuthenticatorException ae) {
-                            Log.e(TAG, "Got OperationCanceledException", ae);
-                        }
-                        onAccountResults(accounts);
-                    }
-                }, null /* handler */);
+//        AccountManager.get(MainApplication.getContext()).getAccountsByTypeAndFeatures(ACCOUNT_TYPE_GOOGLE, FEATURES_MAIL,
+//                new AccountManagerCallback<Account[]>() {
+//                    @Override
+//                    public void run(AccountManagerFuture<Account[]> future) {
+//                        Mail m = new Mail("stefano286@gmail.com", "Lhouse2806");
+//
+//                        String[] toArr = {"stefano286@gmail.com"};
+//                        m.setTo(toArr);
+//                        m.setFrom("stefano286@gmail.com");
+//                        m.setSubject("This is an email sent using my Mail JavaMail wrapper from an Android device.");
+//                        m.setBody("Email body.");
+//                        try {
+//                            if(m.send()) { Log.i("MailApp", "Email was sent successfully"); }
+//                            else {         Log.i("MailApp", "Email was not sent"); }
+//                        } catch(Exception e) { Log.i("MailApp", "Could not send email", e); }
 
 
-//        HttpClient httpClient = new DefaultHttpClient();
-//        HttpContext localContext = new BasicHttpContext();
+//                        Account[] accounts = null;
+//                        try { accounts = future.getResult(); }
+//                        catch (OperationCanceledException oce) { Log.e(TAG, "Got OperationCanceledException", oce);}
+//                        catch (IOException ioe)                { Log.e(TAG, "Got OperationCanceledException", ioe);}
+//                        catch (AuthenticatorException ae)      { Log.e(TAG, "Got OperationCanceledException", ae); }
+//                        onAccountResults(accounts);
+//                    }
+//                }, null /* handler */);
 
         String text = "";
-        if (module.mUrl.length() > 0) {
-            try {
-//                String urlStr = module.mUrl;
-//                URL url = new URL(urlStr);
-//                URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-//                url = uri.toURL();
-//                // the above looks convoluted, but is necessary to get the urlencoding correct
-//                HttpGet httpGet = new HttpGet(uri);
-//                HttpResponse response = httpClient.execute(httpGet, localContext);
-//                HttpEntity entity = response.getEntity();
-//                text += "\n" + Utils.getASCIIContentFromEntity(entity);
-            } catch (Exception e) {	}
-        }
+        if (module.mUrl.length() > 0) { try {  } catch (Exception e) {	} }
         return text;
     }
-
-    private void onAccountResults(Account[] accounts) {
-        Log.i(TAG, "received accounts: " + Arrays.toString(accounts));
-        if (accounts != null && accounts.length > 0) {
-            // Pick the first one, and display a list of labels
-            final String account = accounts[0].name;
-            Log.i(TAG, "Starting loader for labels of account: " + account);
-            final Bundle args = new Bundle();
-            args.putString("account", account);
-            //getSupportLoaderManager().restartLoader(0, args, this);
-            acs = account;
-        }
-    }
-
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        final String account = args.getString("account");
-//        final Uri labelsUri = com.ineptech.magicmirror.modules.GmailContract.Labels.getLabelsUri(account);
-//        return new CursorLoader(this, labelsUri, null, null, null, null);
-//    }
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        if (data != null) {
-//            Log.i(TAG, "Received cursor with # rows: " + data.getCount());
-//        }
-//        mAdapter.swapCursor(data);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//    }
-
-
 
     protected void onPostExecute(String results) {
         if (results!=null) {
@@ -329,4 +303,43 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
             module.consecFails++;
         }
     }
+
+    private String[] ReadMailbox(String MailboxName) throws IOException {
+        Properties props = new Properties();
+        props.setProperty("mail.imap.ssl.enable", "true");
+        props.setProperty("mail.store.protocol", "imaps");
+        props.setProperty("mail.imaps.host", "imap.gmail.com");
+        props.setProperty("mail.imaps.port", "993");
+        IMAPFolder ActiveMailbox = null;
+        List<String> FromAddressArrList = new ArrayList<String>();
+
+        try {
+            Session session = Session.getInstance(props);
+            Store store = session.getStore();
+            store.connect("imap.gmail.com", "stefano286@gmail.com", "Lhouse2806");
+            ActiveMailbox = (IMAPFolder) store.getFolder(MailboxName);
+            ActiveMailbox.open(Folder.READ_ONLY);
+            Message[] messages = ActiveMailbox.getMessages();
+            //System.out.println("Number of mails = " + messages.length);
+            for (int i = 0; i < messages.length; i++) {
+                Message message = messages[i];
+                Address[] from = message.getFrom();
+                FromAddressArrList.add(from[0].toString());
+            }
+            //ActiveMailbox.close(true);
+            store.close();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        String[] FromAddressArr = new String[FromAddressArrList.size()];
+        FromAddressArrList.toArray(FromAddressArr);
+        return FromAddressArr;
+    }
+
 }
+
+
+
+
