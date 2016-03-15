@@ -114,7 +114,7 @@ public class EmailMsg extends Module {
         } else {        // widgets for adding a new Url
 //        if (mUrl.length() == 0) {
             final EditText addurl = new EditText(MainApplication.getContext());
-            addurl.setText("http://ineptech.com/test.html");
+            addurl.setText("http://guhu.website/mirrordisplay.html");//http://ineptech.com/test.html");
             Button plus = new Button(MainApplication.getContext());
             plus.setText("+");
             plus.setOnClickListener
@@ -216,7 +216,6 @@ public class EmailMsg extends Module {
             tv.setText("");
             tv.setVisibility(TextView.GONE);
         } else if (Calendar.getInstance().getTimeInMillis() > (lastRan + timeBetweenCalls)) {
-            Log.i("TestApp", "doin stuff here 00");
             tv.setVisibility(TextView.VISIBLE);
             new EmailMsgTask(this).execute();
         }
@@ -241,23 +240,23 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
     private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
     private static final String[] FEATURES_MAIL = {"service_mail"};
     static final String TAG = "TestApp";
+    public String acs;
+
 
 
     @Override
     protected String doInBackground(Void... params) {
 
-        Log.i(TAG, "doin stuff here 1");
         // Get the account list, and pick the first one
         Log.i(TAG, "doin stuff here 2"+MainApplication.getContext());
         AccountManager.get(MainApplication.getContext()).getAccountsByTypeAndFeatures(ACCOUNT_TYPE_GOOGLE, FEATURES_MAIL,
                 new AccountManagerCallback<Account[]>() {
                     @Override
                     public void run(AccountManagerFuture<Account[]> future) {
-                        Log.i(TAG, "doin stuff here 3"+future);
+                        Log.i(TAG, "doin stuff here 3");
                         Account[] accounts = null;
                         try {
                             accounts = future.getResult();
-                            Log.i(TAG, "doin stuff here 4"+accounts);
                         } catch (OperationCanceledException oce) {
                             Log.e(TAG, "Got OperationCanceledException", oce);
                         } catch (IOException ioe) {
@@ -270,23 +269,21 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
                 }, null /* handler */);
 
 
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpContext localContext = new BasicHttpContext();
+//        HttpClient httpClient = new DefaultHttpClient();
+//        HttpContext localContext = new BasicHttpContext();
 
         String text = "";
-
         if (module.mUrl.length() > 0) {
             try {
-                String urlStr = module.mUrl;
-                URL url = new URL(urlStr);
-                URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-                url = uri.toURL();
-                // the above looks convoluted, but is necessary to get the urlencoding correct
-                HttpGet httpGet = new HttpGet(uri);
-                HttpResponse response = httpClient.execute(httpGet, localContext);
-                HttpEntity entity = response.getEntity();
-                text += "\n" + Utils.getASCIIContentFromEntity(entity);
-
+//                String urlStr = module.mUrl;
+//                URL url = new URL(urlStr);
+//                URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+//                url = uri.toURL();
+//                // the above looks convoluted, but is necessary to get the urlencoding correct
+//                HttpGet httpGet = new HttpGet(uri);
+//                HttpResponse response = httpClient.execute(httpGet, localContext);
+//                HttpEntity entity = response.getEntity();
+//                text += "\n" + Utils.getASCIIContentFromEntity(entity);
             } catch (Exception e) {	}
         }
         return text;
@@ -294,15 +291,14 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
 
     private void onAccountResults(Account[] accounts) {
         Log.i(TAG, "received accounts: " + Arrays.toString(accounts));
-        Log.i(TAG, "accounts is null: "+ accounts);
-        Log.i(TAG, "accoun lenth: " + accounts.length);
         if (accounts != null && accounts.length > 0) {
             // Pick the first one, and display a list of labels
             final String account = accounts[0].name;
             Log.i(TAG, "Starting loader for labels of account: " + account);
             final Bundle args = new Bundle();
             args.putString("account", account);
-           // getSupportLoaderManager().restartLoader(0, args, this);
+            //getSupportLoaderManager().restartLoader(0, args, this);
+            acs = account;
         }
     }
 

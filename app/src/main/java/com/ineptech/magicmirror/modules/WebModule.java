@@ -83,7 +83,7 @@ public class WebModule extends Module {
     	// widgets for adding a new Url
     	if (mUrl.length() == 0) {
 	    	final EditText addurl = new EditText(MainApplication.getContext());
-	    	addurl.setText("http://ineptech.com/test.html");
+			addurl.setText("http://guhu.website/mirrordisplay.html");//"http://ineptech.com/test.html");
 	    	Button plus = new Button(MainApplication.getContext());
 	    	plus.setText("+");
 	    	plus.setOnClickListener
