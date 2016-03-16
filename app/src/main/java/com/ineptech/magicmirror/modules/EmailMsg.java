@@ -1,42 +1,11 @@
 package com.ineptech.magicmirror.modules;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.security.NoSuchProviderException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
-
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.location.Address;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
-//import android.support.v4.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 
 import android.os.AsyncTask;
 import android.text.Html;
@@ -49,14 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ineptech.magicmirror.MainApplication;
-import com.ineptech.magicmirror.Utils;
-import com.sun.mail.imap.IMAPFolder;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.*;
+
 
 /**
  * Created by Stefano on 10-Mar-16.
@@ -70,7 +37,6 @@ public class EmailMsg extends Module {
     public String mEmailAccount;
     public String mEmailPasswod;
     final String prefsUrl = "EmailMsg";
-    final String defaultUrl = "";
     final String defaultAcc = "";
     final String defaultPsw = "";
 
@@ -78,17 +44,14 @@ public class EmailMsg extends Module {
 
     public EmailMsg() {
         super("EmailMsg Module");
-        desc = "This module would, one day, fetch and display data from gmail account";
+        desc = "This module fetches and displays data from gmail account";
         defaultTextSize = 40;
-        sampleString = "Arbitrary email account";
-        mUrl          = "";
         mEmailAccount = "";//"trentanniepassa@gmail.com";
         mEmailPasswod = "";//"trentanni";
         loadConfig();
     }
 
     private void loadConfig() {
-        mUrl          = prefs.get(prefsUrl, defaultUrl);
         mEmailAccount = prefs.get(prefsUrl+"_emailAccount", defaultAcc);
         mEmailPasswod = prefs.get(prefsUrl+"_emailPassword", defaultPsw);
     }
@@ -96,7 +59,6 @@ public class EmailMsg extends Module {
     @Override
     public void saveConfig() {
         super.saveConfig();
-        prefs.set(prefsUrl, mUrl);
         prefs.set(prefsUrl+"_emailAccount", mEmailAccount);
         prefs.set(prefsUrl+"_emailPassword", mEmailPasswod);
     }
@@ -105,46 +67,7 @@ public class EmailMsg extends Module {
     public void makeConfigLayout() {
         super.makeConfigLayout();
 
-        // add a display of each item in the map
-        if (mUrl.length() > 0) {
-            Button remove = new Button(MainApplication.getContext());
-            remove.setText("X");
-            remove.setOnClickListener
-                    (new View.OnClickListener() {
-                        public void onClick(View v) {
-                            mUrl = "";
-                            saveConfig();
-                            makeConfigLayout();
-                        }
-                    });
-            LinearLayout holder = new LinearLayout(MainApplication.getContext());
-            holder.setOrientation(LinearLayout.HORIZONTAL);
-            TextView hdtv = new TextView(MainApplication.getContext());
-            hdtv.setText(mUrl);
-            holder.addView(hdtv);
-            holder.addView(remove);
-            configLayout.addView(holder);
-        } else {        // widgets for adding a new Url
-//        if (mUrl.length() == 0) {
-            final EditText addurl = new EditText(MainApplication.getContext());
-            addurl.setText("http://guhu.website/mirrordisplay.html");//http://ineptech.com/test.html");
-            Button plus = new Button(MainApplication.getContext());
-            plus.setText("+");
-            plus.setOnClickListener
-                    (new View.OnClickListener() {
-                        public void onClick(View v) {
-                            mUrl = addurl.getText().toString();
-                            saveConfig();
-                            makeConfigLayout();
-                        }
-                    });
-            LinearLayout holder = new LinearLayout(MainApplication.getContext());
-            holder.setOrientation(LinearLayout.HORIZONTAL);
-            holder.addView(plus);
-            holder.addView(addurl);
-            configLayout.addView(holder);
-        }
-
+        // add a textbox for email and another for psw
         if (mEmailAccount.length() > 0) {
             Button remove = new Button(MainApplication.getContext());
             remove.setText("X");
@@ -235,7 +158,6 @@ public class EmailMsg extends Module {
     }
 
     public void newText(String s) {
-        // for now, just overwrite every time this is called
         Spanned span = Html.fromHtml(s);
         tv.setText(span);
         tv.setText(s);
@@ -250,8 +172,6 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         module = _module;
     }
 
-//    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
-//    private static final String[] FEATURES_MAIL = {"service_mail"};
     static final String TAG = "TestApp";
 
 
@@ -259,40 +179,49 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
     @Override
     protected String doInBackground(Void... params) {
 
-        FolderFetchIMAP newm = new FolderFetchIMAP();
-        Log.i(TAG, "doin stuff here with newm " + newm);
+        if (module.mEmailAccount.length()>0 & module.mEmailPasswod.length()>0) { try {  } catch (Exception e) {	} }
+        Properties props = new Properties();
+        props.setProperty("mail.imap.ssl.enable", "true");
+        props.setProperty("mail.store.protocol", "imaps");
+        props.setProperty("mail.imaps.host", "imap.gmail.com");
+        props.setProperty("mail.imaps.port", "993");
+        List<String> FromAddressArrList = new ArrayList<String>();
+        Folder ActiveMailbox;
+
+        try {
+            Session session = Session.getInstance(props);
+            session.setDebug(true);
+            Store store = session.getStore();
+            store.connect("imap.gmail.com", module.mEmailAccount,module.mEmailPasswod);// "stefano286@gmail.com", "Lhouse2806");
+            ActiveMailbox = store.getFolder("INBOX");
+            ActiveMailbox.open(Folder.READ_ONLY);
+            javax.mail.Message[] messages = ActiveMailbox.getMessages();
+            for (int i = messages.length-1; i > messages.length-3; i--) { //messages.length
+                javax.mail.Message msg = messages[i];
+                javax.mail.Address[] from = msg.getFrom();
+                FromAddressArrList.add(from[0].toString());
+
+                Log.i("Read Email","Subject: " + msg.getSubject());
+                Log.i("Read Email","From: "    + msg.getFrom()[0]);
+                Log.i("Read Email","To: "      + msg.getAllRecipients()[0]);
+                Log.i("Read Email","Date: "    + msg.getReceivedDate());
+                Log.i("Read Email","Size: "    + msg.getSize());
+                //Log.i("Read Email", "flag"     + msg.getFlags());
+                // Log.i("Read Email","Body: \n"   + msg.getContent());
+                Log.i("Read Email", msg.getContentType());
+            }
+            //ActiveMailbox.close(true);
+            store.close();
+//        } catch (NoSuchProviderException e) {
+//            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        String[] FromAddressArr = new String[FromAddressArrList.size()];
+        FromAddressArrList.toArray(FromAddressArr);
 
 
-        // Get the account list, and pick the first one
-        Log.i(TAG, "doin stuff here 2"+MainApplication.getContext());
-//        AccountManager.get(MainApplication.getContext()).getAccountsByTypeAndFeatures(ACCOUNT_TYPE_GOOGLE, FEATURES_MAIL,
-//                new AccountManagerCallback<Account[]>() {
-//                    @Override
-//                    public void run(AccountManagerFuture<Account[]> future) {
-//                        Mail m = new Mail("stefano286@gmail.com", "Lhouse2806");
-//
-//                        String[] toArr = {"stefano286@gmail.com"};
-//                        m.setTo(toArr);
-//                        m.setFrom("stefano286@gmail.com");
-//                        m.setSubject("This is an email sent using my Mail JavaMail wrapper from an Android device.");
-//                        m.setBody("Email body.");
-//                        try {
-//                            if(m.send()) { Log.i("MailApp", "Email was sent successfully"); }
-//                            else {         Log.i("MailApp", "Email was not sent"); }
-//                        } catch(Exception e) { Log.i("MailApp", "Could not send email", e); }
-
-
-//                        Account[] accounts = null;
-//                        try { accounts = future.getResult(); }
-//                        catch (OperationCanceledException oce) { Log.e(TAG, "Got OperationCanceledException", oce);}
-//                        catch (IOException ioe)                { Log.e(TAG, "Got OperationCanceledException", ioe);}
-//                        catch (AuthenticatorException ae)      { Log.e(TAG, "Got OperationCanceledException", ae); }
-//                        onAccountResults(accounts);
-//                    }
-//                }, null /* handler */);
-
-        String text = "";
-        if (module.mUrl.length() > 0) { try {  } catch (Exception e) {	} }
+        String text = FromAddressArrList.toString();//"";
         return text;
     }
 
@@ -304,39 +233,48 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         }
     }
 
-    private String[] ReadMailbox(String MailboxName) throws IOException {
-        Properties props = new Properties();
-        props.setProperty("mail.imap.ssl.enable", "true");
-        props.setProperty("mail.store.protocol", "imaps");
-        props.setProperty("mail.imaps.host", "imap.gmail.com");
-        props.setProperty("mail.imaps.port", "993");
-        IMAPFolder ActiveMailbox = null;
-        List<String> FromAddressArrList = new ArrayList<String>();
-
-        try {
-            Session session = Session.getInstance(props);
-            Store store = session.getStore();
-            store.connect("imap.gmail.com", "stefano286@gmail.com", "Lhouse2806");
-            ActiveMailbox = (IMAPFolder) store.getFolder(MailboxName);
-            ActiveMailbox.open(Folder.READ_ONLY);
-            Message[] messages = ActiveMailbox.getMessages();
-            //System.out.println("Number of mails = " + messages.length);
-            for (int i = 0; i < messages.length; i++) {
-                Message message = messages[i];
-                Address[] from = message.getFrom();
-                FromAddressArrList.add(from[0].toString());
-            }
-            //ActiveMailbox.close(true);
-            store.close();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        String[] FromAddressArr = new String[FromAddressArrList.size()];
-        FromAddressArrList.toArray(FromAddressArr);
-        return FromAddressArr;
-    }
+//    private String[] ReadMailbox(String MailboxName) throws IOException {
+//        Properties props = new Properties();
+//        props.setProperty("mail.imap.ssl.enable", "true");
+//        props.setProperty("mail.store.protocol", "imaps");
+//        props.setProperty("mail.imaps.host", "imap.gmail.com");
+//        props.setProperty("mail.imaps.port", "993");
+//        List<String> FromAddressArrList = new ArrayList<String>();
+//
+//        try {
+//            Session session = Session.getInstance(props);
+//            Store store = session.getStore();
+//            store.connect("imap.gmail.com", "stefano286@gmail.com", "Lhouse2806");
+//            Folder ActiveMailbox = store.getDefaultFolder();
+//            ActiveMailbox.open(Folder.READ_ONLY);
+//            javax.mail.Message[] messages = ActiveMailbox.getMessages();
+//            //System.out.println("Number of mails = " + messages.length);
+//            for (int i = 0; i < 10; i++) { //messages.length
+//                javax.mail.Message msg = messages[i];
+//                javax.mail.Address[] from = msg.getFrom();
+//                FromAddressArrList.add(from[0].toString());
+//
+//                Log.i("Read Email","Subject: " + msg.getSubject());
+//                Log.i("Read Email","From: " + msg.getFrom()[0]);
+//                Log.i("Read Email","To: "+msg.getAllRecipients()[0]);
+//                Log.i("Read Email","Date: "+msg.getReceivedDate());
+//                Log.i("Read Email","Size: "+msg.getSize());
+//                Log.i("Read Email","flag"+msg.getFlags());
+//                Log.i("Read Email","Body: \n"+ msg.getContent());
+//                Log.i("Read Email", msg.getContentType());
+//            }
+//            //ActiveMailbox.close(true);
+//            store.close();
+////        } catch (NoSuchProviderException e) {
+////            e.printStackTrace();
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
+//
+//        String[] FromAddressArr = new String[FromAddressArrList.size()];
+//        FromAddressArrList.toArray(FromAddressArr);
+//        return FromAddressArr;
+//    }
 
 }
 
