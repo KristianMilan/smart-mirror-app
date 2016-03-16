@@ -115,8 +115,8 @@ public class WebModule extends Module {
 	
 	public void newText(String s) {
 		// for now, just overwrite every time this is called
-		Spanned span = Html.fromHtml(s);
-		tv.setText(span);
+//		Spanned span = Html.fromHtml(s);
+//		tv.setText(span);
 		tv.setText(s);
 	}
 }

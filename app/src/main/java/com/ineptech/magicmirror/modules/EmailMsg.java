@@ -158,8 +158,8 @@ public class EmailMsg extends Module {
     }
 
     public void newText(String s) {
-        Spanned span = Html.fromHtml(s);
-        tv.setText(span);
+//        Spanned span = Html.fromHtml(s);
+//        tv.setText(span);
         tv.setText(s);
     }
 }
@@ -186,20 +186,22 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         props.setProperty("mail.imaps.host", "imap.gmail.com");
         props.setProperty("mail.imaps.port", "993");
         List<String> FromAddressArrList = new ArrayList<String>();
+        String text = "";
         Folder ActiveMailbox;
 
         try {
             Session session = Session.getInstance(props);
             session.setDebug(true);
             Store store = session.getStore();
-            store.connect("imap.gmail.com", module.mEmailAccount,module.mEmailPasswod);// "stefano286@gmail.com", "Lhouse2806");
+            store.connect("imap.gmail.com", module.mEmailAccount,module.mEmailPasswod);
             ActiveMailbox = store.getFolder("INBOX");
             ActiveMailbox.open(Folder.READ_ONLY);
             javax.mail.Message[] messages = ActiveMailbox.getMessages();
-            for (int i = messages.length-1; i > messages.length-3; i--) { //messages.length
+            for (int i = messages.length-1; i > messages.length-4; i--) { //messages.length
                 javax.mail.Message msg = messages[i];
-                javax.mail.Address[] from = msg.getFrom();
-                FromAddressArrList.add(from[0].toString());
+                //javax.mail.Address[] from = msg.getFrom();
+                FromAddressArrList.add(msg.getSubject().toString()+"\n");
+                text=text+msg.getSubject().toString()+" \n";
 
                 Log.i("Read Email","Subject: " + msg.getSubject());
                 Log.i("Read Email","From: "    + msg.getFrom()[0]);
@@ -207,7 +209,7 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
                 Log.i("Read Email","Date: "    + msg.getReceivedDate());
                 Log.i("Read Email","Size: "    + msg.getSize());
                 //Log.i("Read Email", "flag"     + msg.getFlags());
-                // Log.i("Read Email","Body: \n"   + msg.getContent());
+                //Log.i("Read Email","Body: \n"   + msg.getContent());
                 Log.i("Read Email", msg.getContentType());
             }
             //ActiveMailbox.close(true);
@@ -220,8 +222,7 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         String[] FromAddressArr = new String[FromAddressArrList.size()];
         FromAddressArrList.toArray(FromAddressArr);
 
-
-        String text = FromAddressArrList.toString();//"";
+        Log.i("Read Email", text);
         return text;
     }
 
