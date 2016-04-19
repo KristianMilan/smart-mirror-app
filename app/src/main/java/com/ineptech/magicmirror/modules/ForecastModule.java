@@ -1,8 +1,12 @@
 package com.ineptech.magicmirror.modules;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,17 +19,24 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.InputType;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ineptech.magicmirror.MainApplication;
+import com.ineptech.magicmirror.R;
 import com.ineptech.magicmirror.Utils;
 
 public class ForecastModule extends Module {
@@ -33,13 +44,16 @@ public class ForecastModule extends Module {
 	String apikey = "323010e9ad3b2b054ee2cfd9bf3fee68";
 	double latitude, latitude_def = 51.526425;
 	double longitude, longitude_def = -0.049339;
-	private static final long timeBetweenCalls = 10 * 60 * 1000; // 10 minutes
+	private static final long timeBetweenCalls = 1 * 30 * 1000; // 10 minutes
 	long lastRan = 0;
 	int consecFails = 0;
 	String cast = "";
+	int cast_show;
 	Boolean useCelsius = true;
 	CheckBox cbCelsius;
-	
+	Context ctx;
+
+
 	public ForecastModule(Context context) {
 		super("Weather");
 		desc = "Shows today's temperatures: \"current (high | low)\" as reported by forecast.io.  "
@@ -49,6 +63,7 @@ public class ForecastModule extends Module {
 				+ "snow/rain/etc icons at some point, haven't gotten to it yet...";
 		defaultTextSize = 72;
 		sampleString = "100\u00B0 (90° | 110°)";
+		ctx = context;
 		loadConfig();
 	}
 	
@@ -121,24 +136,30 @@ public class ForecastModule extends Module {
     	eLat.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL|InputType.TYPE_NUMBER_FLAG_DECIMAL);
     	
     	cbCelsius = new CheckBox(MainApplication.getContext());
-    	cbCelsius.setText("Use Celsius for temperature?");
+    	cbCelsius.setText("Use Celsius units?");
     	cbCelsius.setChecked(useCelsius);
     	holder.addView(cbCelsius);
-    }
+
+	}
     
 	void set() {
-		// TODO: add icons for snow and rain.  To do so:
-		// First, update ___ to include a key word, e.g. "umbrella", to the forecast display test.
-		// Then, trandform it into an icon here with in this method with code like so:  
-			// String keyword = "umbrella";
-		    // int i = cast.indexOf(keyword);
-			// if (i >= 0)
-			//		span.setSpan(isUmbrella, i, i+keyword.length, 0);
-		
-		SpannableString span = new SpannableString(cast);
-		SpannableStringBuilder builder = new SpannableStringBuilder();
-		builder.append(span);
-		tv.setText(builder);
+
+		Drawable myIcon = ctx.getResources().getDrawable(cast_show);
+		myIcon.setBounds(0, 0, tv.getLineHeight(), tv.getLineHeight());
+
+		ImageSpan is = new ImageSpan(myIcon);
+		final Spannable text = new SpannableString("  " + cast);
+		text.setSpan(is, 0,1, 0);
+		tv.setText(text, TextView.BufferType.SPANNABLE);
+
+//		SpannableString span = new SpannableString(cast);
+//		SpannableStringBuilder builder = new SpannableStringBuilder();
+//		builder.append(text);
+//		Bitmap smiley = BitmapFactory.decodeResource(ctx.getResources(), cast_show);
+//		builder.setSpan( new ImageSpan( smiley ), 1, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE );
+//		tv.setText( builder, TextView.BufferType.SPANNABLE );
+
+		Log.i("cast_show","cast_show: "+text);
 		lastRan = Calendar.getInstance().getTimeInMillis();
 	}
 	
@@ -168,6 +189,7 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		if (module.useCelsius)
 			forecastParams += "&units=si";
 		String wholeURL = forecastURL+forecastTime+forecastParams;
+		//Log.i("forec","0: "+ wholeURL);
 		HttpGet httpGet = new HttpGet(wholeURL);
 		String text = null;
 		try {
@@ -183,10 +205,11 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 
 	protected void onPostExecute(String results) {
 		if (results!=null) {
-			// TODO: improve parsing of the forecast results
 			try {
 				System.out.println(results);
-				module.cast = parseForecast(results);
+				List<String> tmp = parseForecast(results);
+				module.cast = tmp.get(0);
+				module.cast_show = iconResources.get(tmp.get(1));
 				module.set();
 			} catch (Exception e) {
 				module.consecFails++;
@@ -196,28 +219,41 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 			module.consecFails++;
 		}
 	}
+
+	private final Map<String, Integer> iconResources = new HashMap<String, Integer>() {{
+		put("clear-day", R.drawable.clear_day);
+		put("clear-night", R.drawable.clear_night);
+		put("cloudy", R.drawable.cloudy);
+		put("fog", R.drawable.fog);
+		put("partly-cloudy-day", R.drawable.partly_cloudy_day);
+		put("partly-cloudy-night", R.drawable.partly_cloudy_night);
+		put("rain", R.drawable.rain);
+		put("sleet", R.drawable.sleet);
+		put("snow", R.drawable.snow);
+		put("wind", R.drawable.wind);
+	}};
 	
 	String temp = "", high = "", low = "", icon = "";
-	String parseForecast (String s) throws Exception {
-		String re = ".*temperature\":([\\-0-9\\.]+),.*temperatureMin\":([\\-0-9\\.]+),.*temperatureMax\":([\\-0-9\\.]+),.*";
+	List<String> parseForecast (String s) throws Exception {
+		String re = ".*icon\":\"([\\a-z\\.]+)\",.*temperature\":([\\-0-9\\.]+),.*temperatureMin\":([\\-0-9\\.]+),.*temperatureMax\":([\\-0-9\\.]+),.*";
 		Pattern r = Pattern.compile(re);
 		Matcher m = r.matcher(s);
 		if (m.find()) {
-			temp = m.group(1);
-			low = m.group(2);
-			high = m.group(3);
+			icon = m.group(1);
+			temp = m.group(2);
+			low  = m.group(3);
+			high = m.group(4);
 		}
         int ftemp = Math.round(Float.parseFloat(temp));
-		int flow = Math.round(Float.parseFloat(low));
+		int flow  = Math.round(Float.parseFloat(low));
 		int fhigh = Math.round(Float.parseFloat(high));
-		String cast = ftemp +"℃ (min:"+flow+"° | max:"+fhigh+"°)";
-        
+
+		List<String> cast =  Arrays.asList(""+ftemp +"℃ (min:"+flow+"° | max:"+fhigh+"°)", icon);
+
 		// TODO: Check for weather alerts and display something suitable?
 		if (s.contains("Alert")) {
 			// do something...
 		}
-		// TODO: Add icons for snow, rain, etc
-		
 		return cast;
     }
 }

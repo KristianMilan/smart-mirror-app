@@ -1,7 +1,10 @@
 package com.ineptech.magicmirror.modules;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,12 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ineptech.magicmirror.MainActivity;
 import com.ineptech.magicmirror.MainApplication;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 
 /**
@@ -30,48 +36,56 @@ import javax.mail.Store;
  */
 public class EmailMsg extends Module {
 
-    private static final long timeBetweenCalls = 1 * 60 * 1000; // Only update every 1 minute
+    private static final long timeBetweenCalls = 3 * 60 * 1000; // Update every 3 minutes
     long lastRan = 0;
     int consecFails = 0;
-    public String mUrl; // list of stock tickers currently configured to be displayed
     public String mEmailAccount;
     public String mEmailPasswod;
-    final String prefsUrl = "EmailMsg";
+    public int  maxEmailDisplay;
+    final String prefsEMsg  = "EmailMsg";
     final String defaultAcc = "";
     final String defaultPsw = "";
+    final int    defaultEmD = 3;
 
 
 
     public EmailMsg() {
-        super("EmailMsg Module");
-        desc = "This module fetches and displays data from gmail account";
-        defaultTextSize = 40;
-        mEmailAccount = "";//"trentanniepassa@gmail.com";
-        mEmailPasswod = "";//"trentanni";
+        super("GMAIL Messenger");
+        desc = "This module fetches and displays email data from a gmail account.\n"
+                +"Currently, the email Object is displayed. "
+                +"With this module, you can send messages to a specified gmail account "
+                +"you have access and see it displayed on the mirror (it updates every 3 minutes).\n"
+                +"You can set the number of recent emails to be displayed.";
+        defaultTextSize = 35;
+        mEmailAccount   = "";
+        mEmailPasswod   = "";
+        maxEmailDisplay = defaultEmD;
         loadConfig();
     }
 
     private void loadConfig() {
-        mEmailAccount = prefs.get(prefsUrl+"_emailAccount", defaultAcc);
-        mEmailPasswod = prefs.get(prefsUrl+"_emailPassword", defaultPsw);
+        mEmailAccount   = prefs.get(prefsEMsg+"_emailAccount",  defaultAcc);
+        mEmailPasswod   = prefs.get(prefsEMsg+"_emailPassword", defaultPsw);
+        maxEmailDisplay = prefs.get(prefsEMsg+"_emailNumDispl", defaultEmD);
     }
 
     @Override
     public void saveConfig() {
         super.saveConfig();
-        prefs.set(prefsUrl+"_emailAccount", mEmailAccount);
-        prefs.set(prefsUrl+"_emailPassword", mEmailPasswod);
+        prefs.set(prefsEMsg+"_emailAccount",  mEmailAccount);
+        prefs.set(prefsEMsg+"_emailPassword", mEmailPasswod);
+        prefs.set(prefsEMsg+"_emailNumDispl", maxEmailDisplay);
     }
 
     @Override
     public void makeConfigLayout() {
         super.makeConfigLayout();
 
-        // add a textbox for email and another for psw
+        // add a textbox to get user email-account
         if (mEmailAccount.length() > 0) {
             Button remove = new Button(MainApplication.getContext());
             remove.setText("X");
-            remove.setOnClickListener
+            remove.setOnClickListener // what to do when clicking X
                     (new View.OnClickListener() {
                         public void onClick(View v) {
                             mEmailAccount = "";
@@ -90,11 +104,14 @@ public class EmailMsg extends Module {
             final EditText addemail = new EditText(MainApplication.getContext());
             addemail.setText("trentanniepassa@gmail.com");
             Button plusEmail = new Button(MainApplication.getContext());
-            plusEmail.setText("Add email");
-            plusEmail.setOnClickListener
+            plusEmail.setText("Add G-mail ");
+            plusEmail.setOnClickListener // what to do when clicking add
                     (new View.OnClickListener() {
                         public void onClick(View v) {
                             mEmailAccount = addemail.getText().toString();
+                            if (!isValidEmailAddress(mEmailAccount)){//validate GMAIL account
+                                mEmailAccount="";
+                            }
                             saveConfig();
                             makeConfigLayout();
                         }
@@ -106,10 +123,11 @@ public class EmailMsg extends Module {
             configLayout.addView(addholder);
         }
 
+        // add a textbox to get user password
         if (mEmailPasswod.length() > 0) {
-            Button remove = new Button(MainApplication.getContext());
-            remove.setText("X");
-            remove.setOnClickListener
+            Button removePsw = new Button(MainApplication.getContext());
+            removePsw.setText("X");
+            removePsw.setOnClickListener // what to do when clicking X
                     (new View.OnClickListener() {
                         public void onClick(View v) {
                             mEmailPasswod = "";
@@ -122,14 +140,14 @@ public class EmailMsg extends Module {
             TextView hdtv = new TextView(MainApplication.getContext());
             hdtv.setText(mEmailPasswod);
             addholderPsw.addView(hdtv);
-            addholderPsw.addView(remove);
+            addholderPsw.addView(removePsw);
             configLayout.addView(addholderPsw);
         } else {
             final EditText addpsw = new EditText(MainApplication.getContext());
             addpsw.setText("trentanni");
             Button plusPsw = new Button(MainApplication.getContext());
             plusPsw.setText("Add password");
-            plusPsw.setOnClickListener
+            plusPsw.setOnClickListener // what to do when clicking add
                     (new View.OnClickListener() {
                         public void onClick(View v) {
                             mEmailPasswod = addpsw.getText().toString();
@@ -144,11 +162,74 @@ public class EmailMsg extends Module {
             configLayout.addView(addholderPsw);
         }
 
+        // add a textbox to set max number of emails to fetch
+        if (maxEmailDisplay > 0) {
+            Button btn_change = new Button(MainApplication.getContext());
+            btn_change.setText("X");
+            btn_change.setOnClickListener // what to do when clicking X
+                    (new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Log.i("por","maxE "+maxEmailDisplay);
+                            maxEmailDisplay = 0;
+                            saveConfig();
+                            makeConfigLayout();
+                        }
+                    });
+            LinearLayout addholderNED = new LinearLayout(MainApplication.getContext());
+            addholderNED.setOrientation(LinearLayout.HORIZONTAL);
+            TextView hdtv = new TextView(MainApplication.getContext());
+            hdtv.setText(""+maxEmailDisplay);
+            addholderNED.addView(hdtv);
+            addholderNED.addView(btn_change);
+            configLayout.addView(addholderNED);
+        } else {
+            Log.i("por","0 maxE "+maxEmailDisplay);
+            final EditText addNoEmailDisp = new EditText(MainApplication.getContext());
+            addNoEmailDisp.setText(""+defaultEmD);
+            Button plusNumE = new Button(MainApplication.getContext());
+            plusNumE.setText("Add new value");
+            plusNumE.setOnClickListener // what to do when clicking add
+                    (new View.OnClickListener() {
+                        public void onClick(View v) {
+                            if ((addNoEmailDisp.getText().toString()).matches("^[+-]?\\d+$")){//make sure it is integer
+                                maxEmailDisplay = Integer.parseInt(addNoEmailDisp.getText().toString().trim());
+                                maxEmailDisplay = Math.max(maxEmailDisplay, 1);
+                                maxEmailDisplay = Math.min(maxEmailDisplay, 20);
+                            }
+                            Log.i("por","2b maxE "+maxEmailDisplay);
+                            addNoEmailDisp.setText(""+maxEmailDisplay);
+                            saveConfig();
+                            makeConfigLayout();
+                        }
+                    });
+            LinearLayout addholderNED = new LinearLayout(MainApplication.getContext());
+            addholderNED.setOrientation(LinearLayout.HORIZONTAL);
+            addholderNED.addView(plusNumE);
+            addholderNED.addView(addNoEmailDisp);
+            configLayout.addView(addholderNED);
+        }
+
 
     }
 
+    public static boolean isValidEmailAddress(String email) { //make sure it is a GMAIL, valid email
+        boolean result = true;
+        //Log.i("em",email+' '+email.contains("gmail")+' '+email.contains("googlemail")+' '+(email.contains("gmail")||email.contains("googlemail")));
+        if (email.contains("gmail") || email.contains("googlemail")) {
+            try {
+                InternetAddress emailAddr = new InternetAddress(email);
+                emailAddr.validate();
+            } catch (AddressException ex) {
+                result = false;
+            }
+        } else {
+            result = false;
+        }
+        return result;
+    }
+
     public void update() {
-        if (consecFails > 9) {
+        if (consecFails > 9) { // if it fails, make the textview disappear
             tv.setText("");
             tv.setVisibility(TextView.GONE);
         } else if (Calendar.getInstance().getTimeInMillis() > (lastRan + timeBetweenCalls)) {
@@ -172,57 +253,42 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         module = _module;
     }
 
-    static final String TAG = "TestApp";
-
 
 
     @Override
     protected String doInBackground(Void... params) {
 
-        if (module.mEmailAccount.length()>0 & module.mEmailPasswod.length()>0) { try {  } catch (Exception e) {	} }
-        Properties props = new Properties();
-        props.setProperty("mail.imap.ssl.enable", "true");
-        props.setProperty("mail.store.protocol", "imaps");
-        props.setProperty("mail.imaps.host", "imap.gmail.com");
-        props.setProperty("mail.imaps.port", "993");
-        List<String> FromAddressArrList = new ArrayList<String>();
         String text = "";
-        Folder ActiveMailbox;
+        if (module.mEmailAccount.length()>0 & module.mEmailPasswod.length()>0) {
 
-        try {
-            Session session = Session.getInstance(props);
-            session.setDebug(true);
-            Store store = session.getStore();
-            store.connect("imap.gmail.com", module.mEmailAccount,module.mEmailPasswod);
-            ActiveMailbox = store.getFolder("INBOX");
-            ActiveMailbox.open(Folder.READ_ONLY);
-            javax.mail.Message[] messages = ActiveMailbox.getMessages();
-            for (int i = messages.length-1; i > messages.length-4; i--) { //messages.length
-                javax.mail.Message msg = messages[i];
-                //javax.mail.Address[] from = msg.getFrom();
-                FromAddressArrList.add(msg.getSubject().toString()+"\n");
-                text=text+msg.getSubject().toString()+" \n";
+            Properties props = new Properties();
+            props.setProperty("mail.imap.ssl.enable", "true");
+            props.setProperty("mail.store.protocol", "imaps");
+            props.setProperty("mail.imaps.host", "imap.gmail.com");
+            props.setProperty("mail.imaps.port", "993");
+            Folder ActiveMailbox;
 
-                Log.i("Read Email","Subject: " + msg.getSubject());
-                Log.i("Read Email","From: "    + msg.getFrom()[0]);
-                Log.i("Read Email","To: "      + msg.getAllRecipients()[0]);
-                Log.i("Read Email","Date: "    + msg.getReceivedDate());
-                Log.i("Read Email","Size: "    + msg.getSize());
-                //Log.i("Read Email", "flag"     + msg.getFlags());
-                //Log.i("Read Email","Body: \n"   + msg.getContent());
-                Log.i("Read Email", msg.getContentType());
+            try {
+                Session session = Session.getInstance(props);
+                Store store = session.getStore();
+                store.connect("imap.gmail.com", module.mEmailAccount,module.mEmailPasswod);
+                ActiveMailbox = store.getFolder("INBOX");
+                ActiveMailbox.open(Folder.READ_ONLY);
+                javax.mail.Message[] messages = ActiveMailbox.getMessages();
+                for (int i = messages.length-1; i > messages.length-module.maxEmailDisplay - 1; i--) { //only fetch last 3 emails
+                    javax.mail.Message msg = messages[i];
+                    Date date = msg.getReceivedDate();
+                    SimpleDateFormat formatter = new SimpleDateFormat("MMM.d");
+                    String datestr = formatter.format(date);
+                    String SenderName = msg.getFrom()[0].toString();
+                    text=text+msg.getSubject()+" \u0040 "+SenderName.split("\\s+")[0]+" on "+datestr+" \n"; // save email Object's in text
+                }
+                store.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
-            //ActiveMailbox.close(true);
-            store.close();
-//        } catch (NoSuchProviderException e) {
-//            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
         }
-        String[] FromAddressArr = new String[FromAddressArrList.size()];
-        FromAddressArrList.toArray(FromAddressArr);
 
-        Log.i("Read Email", text);
         return text;
     }
 
@@ -234,51 +300,8 @@ class EmailMsgTask extends AsyncTask <Void, Void, String>{
         }
     }
 
-//    private String[] ReadMailbox(String MailboxName) throws IOException {
-//        Properties props = new Properties();
-//        props.setProperty("mail.imap.ssl.enable", "true");
-//        props.setProperty("mail.store.protocol", "imaps");
-//        props.setProperty("mail.imaps.host", "imap.gmail.com");
-//        props.setProperty("mail.imaps.port", "993");
-//        List<String> FromAddressArrList = new ArrayList<String>();
-//
-//        try {
-//            Session session = Session.getInstance(props);
-//            Store store = session.getStore();
-//            store.connect("imap.gmail.com", "stefano286@gmail.com", "Lhouse2806");
-//            Folder ActiveMailbox = store.getDefaultFolder();
-//            ActiveMailbox.open(Folder.READ_ONLY);
-//            javax.mail.Message[] messages = ActiveMailbox.getMessages();
-//            //System.out.println("Number of mails = " + messages.length);
-//            for (int i = 0; i < 10; i++) { //messages.length
-//                javax.mail.Message msg = messages[i];
-//                javax.mail.Address[] from = msg.getFrom();
-//                FromAddressArrList.add(from[0].toString());
-//
-//                Log.i("Read Email","Subject: " + msg.getSubject());
-//                Log.i("Read Email","From: " + msg.getFrom()[0]);
-//                Log.i("Read Email","To: "+msg.getAllRecipients()[0]);
-//                Log.i("Read Email","Date: "+msg.getReceivedDate());
-//                Log.i("Read Email","Size: "+msg.getSize());
-//                Log.i("Read Email","flag"+msg.getFlags());
-//                Log.i("Read Email","Body: \n"+ msg.getContent());
-//                Log.i("Read Email", msg.getContentType());
-//            }
-//            //ActiveMailbox.close(true);
-//            store.close();
-////        } catch (NoSuchProviderException e) {
-////            e.printStackTrace();
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String[] FromAddressArr = new String[FromAddressArrList.size()];
-//        FromAddressArrList.toArray(FromAddressArr);
-//        return FromAddressArr;
-//    }
 
 }
-
 
 
 

@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="additionnal">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/src/main/res/Libs/additionnal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/src/main/java/Libs/additionnal.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

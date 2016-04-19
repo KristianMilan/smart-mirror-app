@@ -38,7 +38,7 @@
         android:padding="5dp"
         android:textSize="64sp"
         tools:text="Partly Cloudy" />
-    
+
     <TextView
         android:id="@+id/transit"
         style="@style/MirrorText"
