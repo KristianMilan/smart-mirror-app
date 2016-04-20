@@ -10,10 +10,10 @@ I added the following features:
 Here is a brief description of how I built the mirror.
 
 First, I bought a two-way acrilic mirror from cutplasticsheeting.co.uk (wasn't easy to find a cheap one in the UK).
-![alt tag](http://imgur.com/426gni5)
+![alt tag](http://i.imgur.com/426gni5.jpg)
 
 
-![alt tag](http://imgur.com/tCibCEp)
+![alt tag](http://i.imgur.com/tCibCEp.jpg)
 
 
 ![alt tag]()
