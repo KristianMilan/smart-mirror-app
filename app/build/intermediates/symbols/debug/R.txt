@@ -622,8 +622,11 @@ int string abc_shareactionprovider_share_with 0x7f050010
 int string abc_shareactionprovider_share_with_application 0x7f050011
 int string abc_toolbar_collapse_description 0x7f050012
 int string app_name 0x7f050014
-int string happy_birthday 0x7f050015
-int string hello_world 0x7f050016
+int string email_address 0x7f050015
+int string email_psw 0x7f050016
+int string forecast_api 0x7f050017
+int string happy_birthday 0x7f050018
+int string hello_world 0x7f050019
 int string status_bar_notification_info_overflow 0x7f050013
 int style AlertDialog_AppCompat 0x7f08007d
 int style AlertDialog_AppCompat_Light 0x7f08007e

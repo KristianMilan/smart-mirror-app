@@ -41,10 +41,10 @@ import com.ineptech.magicmirror.Utils;
 
 public class ForecastModule extends Module {
 	
-	String apikey = "323010e9ad3b2b054ee2cfd9bf3fee68";
-	double latitude, latitude_def = 51.526425;
-	double longitude, longitude_def = -0.049339;
-	private static final long timeBetweenCalls = 1 * 30 * 1000; // 10 minutes
+	String apikey;// fetched from sensitive-data in resources
+	double latitude,  latitude_def  = 40.852676;
+	double longitude, longitude_def = 14.267968;
+	private static final long timeBetweenCalls = 10 * 60 * 1000; // 10 minutes
 	long lastRan = 0;
 	int consecFails = 0;
 	String cast = "";
@@ -64,6 +64,7 @@ public class ForecastModule extends Module {
 		defaultTextSize = 72;
 		sampleString = "100\u00B0 (90° | 110°)";
 		ctx = context;
+		apikey = ctx.getResources().getString(R.string.forecast_api);
 		loadConfig();
 	}
 	

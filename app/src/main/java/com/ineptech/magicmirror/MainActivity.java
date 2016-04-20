@@ -88,11 +88,10 @@ public class MainActivity extends Activity {
         	}
         };
 		mWeb = new WebModule();
-		mEmailmsg = new EmailMsg();
+		mEmailmsg = new EmailMsg(this.getApplicationContext());
 
 		// Make a list of the modules
         modules = new ArrayList<Module>();
-		modules.add(mEmailmsg);
 		modules.add(mTime);
         modules.add(mBirthday);
         modules.add(mDay);
@@ -101,7 +100,8 @@ public class MainActivity extends Activity {
         modules.add(mFinance);
         modules.add(mCalendar);
         modules.add(mTransit);
-        modules.add(mWeb);
+		modules.add(mEmailmsg);
+		modules.add(mWeb);
 
         
         // Set up the brightness control

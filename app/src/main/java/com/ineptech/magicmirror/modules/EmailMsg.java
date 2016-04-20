@@ -1,27 +1,22 @@
 package com.ineptech.magicmirror.modules;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
+import android.content.Context;
 import android.util.Log;
 
 import android.os.AsyncTask;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ineptech.magicmirror.MainActivity;
 import com.ineptech.magicmirror.MainApplication;
+import com.ineptech.magicmirror.R;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;
@@ -45,11 +40,12 @@ public class EmailMsg extends Module {
     final String prefsEMsg  = "EmailMsg";
     final String defaultAcc = "";
     final String defaultPsw = "";
-    final int    defaultEmD = 3;
+    final int    defaultEmD = 3; //default no. of emails to display
+    final String suggPsw, suggAcc;
 
 
 
-    public EmailMsg() {
+    public EmailMsg(Context context) {
         super("GMAIL Messenger");
         desc = "This module fetches and displays email data from a gmail account.\n"
                 +"Currently, the email Object is displayed. "
@@ -60,6 +56,8 @@ public class EmailMsg extends Module {
         mEmailAccount   = "";
         mEmailPasswod   = "";
         maxEmailDisplay = defaultEmD;
+        suggPsw = context.getResources().getString(R.string.email_psw);
+        suggAcc = context.getResources().getString(R.string.email_address);
         loadConfig();
     }
 
@@ -102,7 +100,7 @@ public class EmailMsg extends Module {
             configLayout.addView(addholder);
         } else {
             final EditText addemail = new EditText(MainApplication.getContext());
-            addemail.setText("trentanniepassa@gmail.com");
+            addemail.setText(suggAcc);// sensitive data fetched from resources
             Button plusEmail = new Button(MainApplication.getContext());
             plusEmail.setText("Add G-mail ");
             plusEmail.setOnClickListener // what to do when clicking add
@@ -144,7 +142,7 @@ public class EmailMsg extends Module {
             configLayout.addView(addholderPsw);
         } else {
             final EditText addpsw = new EditText(MainApplication.getContext());
-            addpsw.setText("trentanni");
+            addpsw.setText(suggPsw); // sensitive data fetched from resources
             Button plusPsw = new Button(MainApplication.getContext());
             plusPsw.setText("Add password");
             plusPsw.setOnClickListener // what to do when clicking add

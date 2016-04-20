@@ -4,23 +4,11 @@
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\src\\main\\res\\drawable-nodpi\\bus.png"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-nodpi-v4\\umbrella.png",
-        "source": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\src\\main\\res\\drawable-nodpi\\umbrella.png"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-nodpi-v4\\umbrella.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\src\\main\\res\\drawable-nodpi\\umbrella.png"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-nodpi-v4\\train.png",
-        "source": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\src\\main\\res\\drawable-nodpi\\train.png"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-nodpi-v4\\train.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\src\\main\\res\\drawable-nodpi\\train.png"
-    },
-    {
-        "merged": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-nodpi-v4\\bus.png",
-        "source": "C:\\Users\\Stefano\\Documents\\mirror-master1\\app\\src\\main\\res\\drawable-nodpi\\bus.png"
     }
 ]
