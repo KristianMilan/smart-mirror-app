@@ -30,3 +30,4 @@ proguard/
 
 # Android Studio captures folder
 captures/
+"smart-mirror-app/app/src/main/res/values/sensitive-data.xml" 
