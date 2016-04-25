@@ -19,8 +19,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -44,7 +42,7 @@ public class ForecastModule extends Module {
 	String apikey;// fetched from sensitive-data in resources
 	double latitude,  latitude_def  = 40.852676;
 	double longitude, longitude_def = 14.267968;
-	private static final long timeBetweenCalls = 10 * 60 * 1000; // 10 minutes
+	private static final long timeBetweenCalls = 1 * 30 * 1000; // 10 minutes
 	long lastRan = 0;
 	int consecFails = 0;
 	String cast = "";
@@ -59,8 +57,7 @@ public class ForecastModule extends Module {
 		desc = "Shows today's temperatures: \"current (high | low)\" as reported by forecast.io.  "
 				+ "This will not work until you go to forecast.io and register to get a (free) api key "
 				+ "and enter it in to the box below.  To do so, visit developer.forecast.io and click on Register. "
-				+ "Then enter your latitude and longitude (be sure to get the signs right).  I hope to add "
-				+ "snow/rain/etc icons at some point, haven't gotten to it yet...";
+				+ "Then enter your latitude and longitude (be sure to get the signs right).";
 		defaultTextSize = 72;
 		sampleString = "100\u00B0 (90° | 110°)";
 		ctx = context;
@@ -78,9 +75,9 @@ public class ForecastModule extends Module {
 	}
 	
     private void loadConfig() {
-    	latitude = latitude_def;
+    	latitude  = latitude_def;
     	longitude = longitude_def;
-    	String latitude_s = prefs.get(name+"_latitude", ""+latitude_def);
+    	String latitude_s  = prefs.get(name+"_latitude",  ""+latitude_def);
     	String longitude_s = prefs.get(name+"_longitude", ""+longitude_def);
     	try {
     		latitude = Double.parseDouble(latitude_s);
@@ -93,9 +90,9 @@ public class ForecastModule extends Module {
     @Override
     public void saveConfig() {
     	super.saveConfig();
-    	prefs.set(name+"_latitude", eLat.getText().toString());
+    	prefs.set(name+"_latitude",  eLat.getText().toString());
     	prefs.set(name+"_longitude", eLong.getText().toString());
-    	prefs.set(name+"_apikey", eApikey.getText().toString());
+    	prefs.set(name+"_apikey",    eApikey.getText().toString());
     	useCelsius = cbCelsius.isChecked();
     	prefs.set(name+"_useCelsius", useCelsius);
     }
@@ -148,19 +145,11 @@ public class ForecastModule extends Module {
 		Drawable myIcon = ctx.getResources().getDrawable(cast_show);
 		myIcon.setBounds(0, 0, tv.getLineHeight(), tv.getLineHeight());
 
+		// add weather icon before temperature
 		ImageSpan is = new ImageSpan(myIcon);
 		final Spannable text = new SpannableString("  " + cast);
 		text.setSpan(is, 0,1, 0);
 		tv.setText(text, TextView.BufferType.SPANNABLE);
-
-//		SpannableString span = new SpannableString(cast);
-//		SpannableStringBuilder builder = new SpannableStringBuilder();
-//		builder.append(text);
-//		Bitmap smiley = BitmapFactory.decodeResource(ctx.getResources(), cast_show);
-//		builder.setSpan( new ImageSpan( smiley ), 1, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE );
-//		tv.setText( builder, TextView.BufferType.SPANNABLE );
-
-		Log.i("cast_show","cast_show: "+text);
 		lastRan = Calendar.getInstance().getTimeInMillis();
 	}
 	
@@ -170,8 +159,8 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 
 	private ForecastModule module;
 	String sampleResponse = "{\"latitude\":45.52,\"longitude\":122.6819,\"timezone\":\"Asia/Harbin\",\"offset\":8,\"currently\":{\"time\":1449289114,\"summary\":\"Clear\",\"icon\":\"clear-day\",\"precipType\":\"snow\",\"temperature\":22.35,\"apparentTemperature\":11.63,\"dewPoint\":2.76,\"humidity\":0.42,\"windSpeed\":10.22,\"windBearing\":304,\"visibility\":10,\"cloudCover\":0,\"pressure\":1026.52},\"daily\":{\"data\":[{\"time\":1449244800,\"summary\":\"Clear throughout the day.\",\"icon\":\"clear-day\",\"sunriseTime\":1449270846,\"sunsetTime\":1449302882,\"moonPhase\":0.8,\"precipType\":\"snow\",\"temperatureMin\":10.48,\"temperatureMinTime\":1449320400,\"temperatureMax\":22.73,\"temperatureMaxTime\":1449291600,\"apparentTemperatureMin\":4.25,\"apparentTemperatureMinTime\":1449316800,\"apparentTemperatureMax\":12.86,\"apparentTemperatureMaxTime\":1449291600,\"dewPoint\":3.95,\"humidity\":0.58,\"windSpeed\":5.86,\"windBearing\":292,\"visibility\":8.33,\"pressure\":1024.88}]},\"flags\":{\"sources\":[\"isd\"],\"isd-stations\":[\"508440-99999\",\"509490-99999\",\"540260-99999\",\"540490-99999\"],\"units\":\"us\"}}";
-	String sampleForecastURL = "https://api.forecast.io/forecast/api_key_goes_here/45.5200,-122.6819,2015-12-04T20:18:34-0800?units=us&exclude=minutely,hourly";
-	
+	//String sampleForecastURL = "https://api.forecast.io/forecast/api_key_goes_here/45.5200,-122.6819,2015-12-04T20:18:34-0800?units=us&exclude=minutely,hourly";
+
 	public ForecastTask(ForecastModule _module) {
 		module = _module;
 	}
@@ -183,14 +172,15 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpContext localContext = new BasicHttpContext();
-		String forecastTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		forecastTime += "T" + new SimpleDateFormat("HH:mm:ss-0800").format(new Date());
-		String forecastURL = "https://api.forecast.io/forecast/"+module.apikey+"/"+module.latitude+","+module.longitude+",";
+//		String forecastTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+//		forecastTime += "T" + new SimpleDateFormat("HH:mm:ss-0800").format(new Date());
+//		Log.i("forec: ","forecastTime: "+forecastTime+" ; ");
+		String forecastURL = "https://api.forecast.io/forecast/"+module.apikey+"/"+module.latitude+","+module.longitude;//+",";
 		String forecastParams = "?exclude=minutely,hourly";
 		if (module.useCelsius)
 			forecastParams += "&units=si";
-		String wholeURL = forecastURL+forecastTime+forecastParams;
-		//Log.i("forec","0: "+ wholeURL);
+		String wholeURL = forecastURL+forecastParams;//forecastURL+forecastTime+forecastParams;
+		Log.i("forec wea ",wholeURL);
 		HttpGet httpGet = new HttpGet(wholeURL);
 		String text = null;
 		try {
@@ -234,22 +224,26 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		put("wind", R.drawable.wind);
 	}};
 	
-	String temp = "", high = "", low = "", icon = "";
+	String summ="", icon = "", temp = "", high = "", low = "";
 	List<String> parseForecast (String s) throws Exception {
-		String re = ".*icon\":\"([\\a-z\\.]+)\",.*temperature\":([\\-0-9\\.]+),.*temperatureMin\":([\\-0-9\\.]+),.*temperatureMax\":([\\-0-9\\.]+),.*";
+		String re = ".*summary\":\"([\\a-z\\.]+?)\",.*icon\":\"([\\a-z\\.]+?)\",.*temperature\":([\\-0-9\\.]+),.*temperatureMin\":([\\-0-9\\.]+),.*temperatureMax\":([\\-0-9\\.]+),.*";
 		Pattern r = Pattern.compile(re);
 		Matcher m = r.matcher(s);
+		Log.i("forec: ",s);
+		Log.i("forec: ",""+module.latitude_def+"; long:"+module.longitude_def);
+		Log.i("forec: ",""+module.latitude+"; long:"+module.longitude);
 		if (m.find()) {
-			icon = m.group(1);
-			temp = m.group(2);
-			low  = m.group(3);
-			high = m.group(4);
+			summ = m.group(1); // summamry of forecast
+			icon = m.group(2); // icon to display
+			temp = m.group(3);
+			low  = m.group(4);
+			high = m.group(5);
 		}
-        int ftemp = Math.round(Float.parseFloat(temp));
+		int ftemp = Math.round(Float.parseFloat(temp));
 		int flow  = Math.round(Float.parseFloat(low));
 		int fhigh = Math.round(Float.parseFloat(high));
 
-		List<String> cast =  Arrays.asList(""+ftemp +"℃ (min:"+flow+"° | max:"+fhigh+"°)", icon);
+		List<String> cast =  Arrays.asList(""+ftemp +"℃ (min:"+flow+"° | max:"+fhigh+"°) ~ "+summ, icon);
 
 		// TODO: Check for weather alerts and display something suitable?
 		if (s.contains("Alert")) {
