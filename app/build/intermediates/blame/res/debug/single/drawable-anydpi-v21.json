@@ -1,27 +1,27 @@
 [
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\clear_day.xml",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\clear_day.xml"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\snow.xml",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\snow.xml"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\home.xml",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\home.xml"
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\clear_day.xml",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\clear_day.xml"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\news_ap.xml",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\news_ap.xml"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\fog.xml",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\fog.xml"
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\home.xml",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\home.xml"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\umbrella.xml",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\umbrella.xml"
+    },
+    {
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\fog.xml",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\fog.xml"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\partly_cloudy_day.xml",
@@ -40,12 +40,12 @@
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\partly_cloudy_night.xml"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\wind.xml",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\wind.xml"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\cloudy.xml",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\cloudy.xml"
+    },
+    {
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\wind.xml",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\wind.xml"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21\\rain.xml",

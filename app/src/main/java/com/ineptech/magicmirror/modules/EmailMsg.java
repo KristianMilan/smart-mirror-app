@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ineptech.magicmirror.MainApplication;
 import com.ineptech.magicmirror.R;
@@ -41,7 +42,8 @@ public class EmailMsg extends Module {
     final String defaultAcc = "";
     final String defaultPsw = "";
     final int    defaultEmD = 3; //default no. of emails to display
-    final String suggPsw, suggAcc;
+    public String suggPsw, suggAcc;
+    public Context ctx;
 
 
 
@@ -56,6 +58,7 @@ public class EmailMsg extends Module {
         mEmailAccount   = "";
         mEmailPasswod   = "";
         maxEmailDisplay = defaultEmD;
+        ctx     = context;
         suggPsw = context.getResources().getString(R.string.email_psw);
         suggAcc = context.getResources().getString(R.string.email_address);
         loadConfig();
@@ -109,6 +112,7 @@ public class EmailMsg extends Module {
                             mEmailAccount = addemail.getText().toString();
                             if (!isValidEmailAddress(mEmailAccount)){//validate GMAIL account
                                 mEmailAccount="";
+                                Toast.makeText(ctx, "INVALID EMAIL! \nremember to use a GMAIL account!", Toast.LENGTH_LONG).show();
                             }
                             saveConfig();
                             makeConfigLayout();
@@ -212,7 +216,6 @@ public class EmailMsg extends Module {
 
     public static boolean isValidEmailAddress(String email) { //make sure it is a GMAIL, valid email
         boolean result = true;
-        //Log.i("em",email+' '+email.contains("gmail")+' '+email.contains("googlemail")+' '+(email.contains("gmail")||email.contains("googlemail")));
         if (email.contains("gmail") || email.contains("googlemail")) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);

@@ -42,7 +42,7 @@ public class ForecastModule extends Module {
 	String apikey;// fetched from sensitive-data in resources
 	double latitude,  latitude_def  = 40.852676;
 	double longitude, longitude_def = 14.267968;
-	private static final long timeBetweenCalls = 1 * 30 * 1000; // 10 minutes
+	private static final long timeBetweenCalls = 10 * 60 * 1000; // 10 minutes
 	long lastRan = 0;
 	int consecFails = 0;
 	String cast = "";

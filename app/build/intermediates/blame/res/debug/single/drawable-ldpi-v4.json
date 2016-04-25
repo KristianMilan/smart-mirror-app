@@ -1,35 +1,35 @@
 [
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\rain.png",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\rain.png"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\clear_day.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\clear_day.png"
+    },
+    {
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\rain.png",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\rain.png"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\sleet.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\sleet.png"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\snow.png",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\snow.png"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\home.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\home.png"
+    },
+    {
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\snow.png",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\snow.png"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\news_ap.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\news_ap.png"
     },
     {
-        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\wind.png",
-        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\wind.png"
-    },
-    {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\fog.png",
         "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\fog.png"
+    },
+    {
+        "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\wind.png",
+        "source": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\wind.png"
     },
     {
         "merged": "C:\\Users\\Stefano\\Documents\\smart-mirror-app\\app\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\umbrella.png",
