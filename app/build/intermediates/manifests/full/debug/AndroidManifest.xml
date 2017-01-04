@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ineptech.magicmirror"
     android:versionCode="2"
-    android:versionName="1.0" >
- <!-- Enables access to Gmail's content provider -->
+    android:versionName="1.0" > <!-- Enables access to Gmail's content provider -->
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="21" />
@@ -13,8 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_CONTENT_PROVIDER" />
- <!-- SC -->
+    <uses-permission android:name="android.permission.READ_CONTENT_PROVIDER" /> <!-- SC -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application

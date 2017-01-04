@@ -69,8 +69,11 @@ public class ForecastModule extends Module {
 		if (consecFails > 9) {
 			tv.setText("");
 			tv.setVisibility(TextView.GONE);
+//			Log.e("forecast","consecutive fails");
 		} else if (Calendar.getInstance().getTimeInMillis() > (lastRan + timeBetweenCalls)) {
 			new ForecastTask(this).execute();
+//			Log.e("forecast","no consecutive fails");
+
 		}
 	}
 	
@@ -79,7 +82,7 @@ public class ForecastModule extends Module {
     	longitude = longitude_def;
     	String latitude_s  = prefs.get(name+"_latitude",  ""+latitude_def);
     	String longitude_s = prefs.get(name+"_longitude", ""+longitude_def);
-    	try {
+		try {
     		latitude = Double.parseDouble(latitude_s);
     		longitude = Double.parseDouble(longitude_s);
     	} catch (Exception e) { }
@@ -95,7 +98,9 @@ public class ForecastModule extends Module {
     	prefs.set(name+"_apikey",    eApikey.getText().toString());
     	useCelsius = cbCelsius.isChecked();
     	prefs.set(name+"_useCelsius", useCelsius);
-    }
+//		Log.e("forecast",eLat.getText().toString()+" "+eApikey.getText().toString());
+
+	}
     
     private EditText eLong;
     private EditText eLat;
@@ -172,15 +177,16 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpContext localContext = new BasicHttpContext();
-//		String forecastTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//		forecastTime += "T" + new SimpleDateFormat("HH:mm:ss-0800").format(new Date());
-//		Log.i("forec: ","forecastTime: "+forecastTime+" ; ");
-		String forecastURL = "https://api.forecast.io/forecast/"+module.apikey+"/"+module.latitude+","+module.longitude;//+",";
+		String forecastTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		forecastTime += "T" + new SimpleDateFormat("HH:mm:ss-0800").format(new Date());
+//		Log.e("forec: ","forecastTime: "+forecastTime+" ; ");
+		String forecastURL = "https://api.darksky.net/forecast/"+module.apikey+"/"+module.latitude+","+module.longitude;//+",";
+//		"https://api.forecast.io/forecast/"+module.apikey+"/"+module.latitude+","+module.longitude;//+",";
 		String forecastParams = "?exclude=minutely,hourly";
 		if (module.useCelsius)
 			forecastParams += "&units=si";
 		String wholeURL = forecastURL+forecastParams;//forecastURL+forecastTime+forecastParams;
-		Log.i("forec wea ",wholeURL);
+//		Log.e("forec wea ",wholeURL);
 		HttpGet httpGet = new HttpGet(wholeURL);
 		String text = null;
 		try {
@@ -229,9 +235,9 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		String re = ".*summary\":\"([\\a-z\\.]+?)\",.*icon\":\"([\\a-z\\.]+?)\",.*temperature\":([\\-0-9\\.]+),.*temperatureMin\":([\\-0-9\\.]+),.*temperatureMax\":([\\-0-9\\.]+),.*";
 		Pattern r = Pattern.compile(re);
 		Matcher m = r.matcher(s);
-		Log.i("forec: ",s);
-		Log.i("forec: ",""+module.latitude_def+"; long:"+module.longitude_def);
-		Log.i("forec: ",""+module.latitude+"; long:"+module.longitude);
+//		Log.e("forec H ",s);
+//		Log.e("forec ",""+module.latitude_def+"; long:"+module.longitude_def);
+//		Log.e("forec ",""+module.latitude+"; long:"+module.longitude);
 		if (m.find()) {
 			summ = m.group(1); // summamry of forecast
 			icon = m.group(2); // icon to display
@@ -242,6 +248,10 @@ class ForecastTask extends AsyncTask <Void, Void, String>{
 		int ftemp = Math.round(Float.parseFloat(temp));
 		int flow  = Math.round(Float.parseFloat(low));
 		int fhigh = Math.round(Float.parseFloat(high));
+//		Log.e("forec summ",summ);
+//		Log.e("forec icon",icon);
+//		Log.e("forec temp",temp);
+//		Log.e("forec low",low);
 
 		List<String> cast =  Arrays.asList(""+ftemp +"℃ (min:"+flow+"° | max:"+fhigh+"°) ~ "+summ, icon);
 

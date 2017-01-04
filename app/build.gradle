@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '24.0.2'
     //buildToolsVersion '23.0.1'
     useLibrary  'org.apache.http.legacy'
 
@@ -28,10 +28,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile files('src/main/res/Libs/activation.jar')
-    compile files('src/main/res/Libs/additionnal.jar')
-    compile files('src/main/res/Libs/mail.jar')
-    compile files('src/main/java/Libs/mail.jar')
-    compile files('src/main/java/Libs/additionnal.jar')
-    compile files('src/main/java/Libs/activation.jar')
+    compile files('src/main/java/libs/activation.jar')
+    compile files('src/main/java/libs/additionnal.jar')
+    compile files('src/main/java/libs/mail.jar')
 }

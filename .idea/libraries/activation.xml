@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="activation">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/src/main/res/Libs/activation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/src/main/java/Libs/activation.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
