@@ -2,85 +2,67 @@
 <items version="2" >
 
     <item
-        is-multidex="true"
-        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="334187875b5c453db085f36ec037b8751bb90e8e">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_97f116eb5446b03c568ce75bb896b39f941464c8/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="185afe6275ceb25af8b5f2f2b1b37509b35aa43e">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_ea26af0ce88b4f13e750dd0c17568755b807543e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
+        is-multidex="false"
         jar="/Users/joeDiHare/Documents/smart-mirror-app/app/src/main/java/libs/mail.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="428e267abff0d10802ccde86b915da2c20471160">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/2/mail_34cf82c35d926ba2dd2fedd7ebde0a96829a0a94/classes.dex" />
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/mail_34cf82c35d926ba2dd2fedd7ebde0a96829a0a94.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.1.1_0931d3d5ffeda57b700c3c2261d89bc3332d082d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.1.1_9125ab43eee9d94c5d6429452182fd02581b435a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
+        is-multidex="false"
         jar="/Users/joeDiHare/Documents/smart-mirror-app/app/src/main/java/libs/additionnal.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/2/additionnal_dcc5c61813bc0129ffd3af26d5d070470c868ab0/classes.dex" />
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/additionnal_dcc5c61813bc0129ffd3af26d5d070470c868ab0.jar" />
     </item>
     <item
-        is-multidex="true"
+        is-multidex="false"
         jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/libs/internal_impl-23.1.1.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.1.1_1c1d3ad892ba990539cdc2d3222322108ad51dd7/classes.dex" />
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/internal_impl-23.1.1_1c1d3ad892ba990539cdc2d3222322108ad51dd7.jar" />
     </item>
     <item
-        is-multidex="true"
+        is-multidex="false"
+        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.1.1_9125ab43eee9d94c5d6429452182fd02581b435a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.1.1_0931d3d5ffeda57b700c3c2261d89bc3332d082d.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/joeDiHare/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.1.1_22a2c46be7c39b55abc9dc2600ba884173f71d17/classes.dex" />
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/support-annotations-23.1.1_22a2c46be7c39b55abc9dc2600ba884173f71d17.jar" />
     </item>
     <item
-        is-multidex="true"
+        is-multidex="false"
         jar="/Users/joeDiHare/Documents/smart-mirror-app/app/src/main/java/libs/activation.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
-        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/transforms/dex/debug/folders/1000/2/activation_09642815d9dac0866eef5dd958fa039cbc46c388/classes.dex" />
+        <dex dex="/Users/joeDiHare/Documents/smart-mirror-app/app/build/intermediates/pre-dexed/debug/activation_09642815d9dac0866eef5dd958fa039cbc46c388.jar" />
     </item>
 
 </items>

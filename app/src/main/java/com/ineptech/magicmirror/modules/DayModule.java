@@ -27,7 +27,7 @@ public class DayModule extends Module {
         
         Spanned span;
         if (Locale.getDefault().getLanguage().compareTo(Locale.US.getLanguage()) == 0) { 
-        	span = Html.fromHtml(formatDayOfMonth.format(now.getTime()) + "" + dayOfMonth + "<sup><small>"
+        	span = Html.fromHtml(formatDayOfMonth.format(now.getTime()) + " " + dayOfMonth + "<sup><small>"
         				+ Utils.getDayOfMonthSuffix(dayOfMonth) + "</small></sup>");
             Log.e("dom1",span.toString());
 
@@ -35,7 +35,7 @@ public class DayModule extends Module {
             Log.e("dom2","here");
             Locale loc = Locale.getDefault();
    //     	DateTimeFormatter formatter_tr_TR = DateTimeFormatter.ofLocalizedDateTime( FormatStyle.FULL ).withLocale( loc );
-            span = Html.fromHtml(formatDayOfMonth.format(now.getTime()) + dayOfMonth + "<sup><small>"
+            span = Html.fromHtml(formatDayOfMonth.format(now.getTime()) + " " + dayOfMonth + "<sup><small>"
                     + Utils.getDayOfMonthSuffix(dayOfMonth) + "</small></sup>");
             Log.e("dom2",span.toString());
         }
